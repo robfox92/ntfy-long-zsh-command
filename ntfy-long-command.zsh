@@ -1,6 +1,12 @@
-NTFY_EXCLUDE=(vim ssh tmux watch journalctl crontab)
-NTFY_MIN_SECONDS=300
-NTFY_URL="https://ntfy.sh/my-zsh-alerts"
+if [[ -z $NTFY_EXCLUDE ]] then;
+  NTFY_EXCLUDE=(vim ssh tmux watch journalctl crontab)
+fi
+if [[ -z $NTFY_MIN_SECONDS ]] then;
+  NTFY_MIN_SECONDS=300
+fi
+if [[ -z $NTFY_URL ]] then;
+  NTFY_URL="https://ntfy.sh/my-zsh-alerts"
+fi
 
 function ntfy_preexec() {
   # executed between when you press enter on a command prompt 
