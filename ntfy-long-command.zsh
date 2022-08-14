@@ -1,12 +1,19 @@
-NTFY_EXCLUDE=(vim ssh tmux watch)
-NTFY_MIN_SECONDS=600
-NTFY_URL="https://ntfy.sh/YOUR-TOPIC-HERE"
+NTFY_EXCLUDE=(vim ssh tmux watch journalctl crontab)
+NTFY_MIN_SECONDS=300
+NTFY_URL="https://ntfy.sh/my-zsh-alerts"
 
 function ntfy_preexec() {
   # executed between when you press enter on a command prompt 
   # but before command is executed
+  NTFY_CMD="$1"
+
+  if [[ ${NTFY_CMD:0:1} == " " ]]; then
+    # line starts with a space so don't send a notification
+    return
+  fi
+
   if [ -n "$NTFY_EXCLUDE" ]; then
-    # NTFY_EXCLUDE is defined
+    # NTFY_EXCLUDE is defined, so check it
     NTFY_CMD="$1"
     for exc in $NTFY_EXCLUDE; do
       if [ "$(echo $NTFY_CMD | grep -c "$exc")" -gt 0 ]; then
@@ -27,8 +34,8 @@ function ntfy_precmd() {
       local ntfy_payload="command \""$NTFY_CMD"\" on "$(hostname)" complete (took "$NTFY_DURATION" seconds)"
       curl  -d $ntfy_payload \
             -H "Tags: "$(hostname)"" \
-            --silent \
-            $NTFY_URL
+            -S -s -o /dev/null \
+            $NTFY_URL 
     fi
     unset NTFY_TIMER
     unset NTFY_CMD
