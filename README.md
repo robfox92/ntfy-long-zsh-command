@@ -9,6 +9,6 @@ To overwrite the defaults, set the following in your .zshrc:
 
 ```zsh
 typeset -g NTFY_MIN_SECONDS=600
-typeset -g NTFY_URL="https://my_private_ntfy_instance.xzy/my_ntfy_topic
+typeset -g NTFY_URL="https://my_private_ntfy_instance.xzy/my_ntfy_topic"
 typeset -g NTFY_EXCLUDE=(ssh)
 ```
