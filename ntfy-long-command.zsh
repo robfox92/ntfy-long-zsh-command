@@ -1,11 +1,11 @@
-if [[ -z $NTFY_EXCLUDE ]] then;
-  NTFY_EXCLUDE=(vim ssh tmux watch journalctl crontab)
+if [[ -z $NTFY_EXCLUDE ]]; then
+  typeset -a NTFY_EXCLUDE=(vim ssh tmux watch journalctl crontab)
 fi
-if [[ -z $NTFY_MIN_SECONDS ]] then;
-  NTFY_MIN_SECONDS=300
+if [[ -z $NTFY_MIN_SECONDS ]]; then
+  local NTFY_MIN_SECONDS=10
 fi
-if [[ -z $NTFY_URL ]] then;
-  NTFY_URL="https://ntfy.sh/my-zsh-alerts"
+if [[ -z $NTFY_URL ]]; then
+  local NTFY_URL="https://ntfy.sh/my-zsh-alerts"
 fi
 
 function ntfy_preexec() {
@@ -40,12 +40,12 @@ function ntfy_precmd() {
       local hours=$(($NTFY_DURATION / 3600))
       local minutes=$(($(($NTFY_DURATION%3600))/60))
       local seconds=$(($NTFY_DURATION%60))
-      local display_duration=${hours}:${(l(2)(0))minutes}:${(l(2)(0))seconds}
-      local ntfy_payload="command \""$NTFY_CMD"\" on "$(hostname)" complete (took "$display_duration")"
-      curl  -d $ntfy_payload \
+      local display_duration=$(printf "%02d:%02d:%02d" hours minutes seconds)
+      local ntfy_payload="command \"${NTFY_CMD}\" on "$(hostname)" complete (took "${display_duration}")"
+      curl  -d ${ntfy_payload} \
             -H "Tags: "$(hostname)"" \
             -S -s -o /dev/null \
-            $NTFY_URL 
+            ${NTFY_URL}
     fi
     unset NTFY_TIMER
     unset NTFY_CMD
